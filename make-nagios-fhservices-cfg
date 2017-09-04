@@ -39,6 +39,19 @@ jenkins_host = os.getenv('JENKINS_HOST')
 jenkins_user = os.getenv('JENKINS_USER')
 jenkins_pass = os.getenv('JENKINS_PASS')
 
+
+check_android = False
+check_mac = False
+
+if rhmap_hostgroups == 'digger':
+    platforms = os.getenv('PLATFORMS')
+    if 'android' in platforms:
+        check_android = True
+    if 'ios' in platforms:
+        check_mac = True
+
+
+
 template_file = '/opt/rhmap/fhservices.cfg.j2'
 nagios_config_filename = '/etc/nagios/conf.d/fhservices.cfg'
 
@@ -56,7 +69,9 @@ j2renderedouput = j2template.render(fh_services=fh_services,
                                     rhmap_admin_email=rhmap_admin_email,
                                     jenkins_host=jenkins_host,
                                     jenkins_user=jenkins_user,
-                                    jenkins_pass=jenkins_pass)
+                                    jenkins_pass=jenkins_pass,
+                                    check_android=check_android,
+                                    check_mac=check_mac)
 
 with open(nagios_config_filename, 'wb') as nagios_config_file:
     nagios_config_file.write(j2renderedouput)

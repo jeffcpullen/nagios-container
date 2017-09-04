@@ -89,7 +89,7 @@ define command {
 
 define command {
   command_name   check_mysql
-  command_line   /opt/rhmap/nagios/plugins/mysql-health --service $ARG1$ --containers $ARG2$ 
+  command_line   /opt/rhmap/nagios/plugins/mysql-health --service $ARG1$ --containers $ARG2$
 }
 
 define contact {
@@ -220,6 +220,7 @@ define service {
        contact_groups rhmapadmins
 }
 
+{%if check_mac %}
 define service {
        service_description mac_ios::ping
        check_command ios_machine_health!{{ jenkins_host }}!443!{{ jenkins_user }}!{{ jenkins_pass }}
@@ -228,7 +229,9 @@ define service {
        contact_groups rhmapadmins
 
 }
+{% endif %}
 
+{%if check_android %}
 define service {
       service_description android_pvc::check
       check_command android_pvc_check
@@ -236,6 +239,8 @@ define service {
       hostgroup_name digger
       contact_groups rhmapadmins
 }
+{% endif %}
+
 
 {% for mongodb_service in mongodb_services %}
 define service {
